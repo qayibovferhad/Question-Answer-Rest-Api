@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const UserSchema = mongoose.Schema({
   name: {
     type: String,
@@ -8,7 +9,7 @@ const UserSchema = mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: [true, "Please try different email"],
+    unique: true,
   },
   role: {
     type: String,
@@ -40,6 +41,16 @@ const UserSchema = mongoose.Schema({
     default: false,
   },
 });
+UserSchema.methods.generateJWT = function () {
+  const payload = {
+    name: this.name,
+    id: this._id,
+  };
+  const token = jwt.sign(payload, "salam123", {
+    expiresIn: "10s",
+  });
+  return token;
+};
 UserSchema.pre("save", function (next) {
   if (!this.isModified("password")) {
     next();
