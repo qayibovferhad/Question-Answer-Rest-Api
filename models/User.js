@@ -47,7 +47,7 @@ UserSchema.methods.generateJWT = function () {
     id: this._id,
   };
   const token = jwt.sign(payload, "salam123", {
-    expiresIn: "10s",
+    expiresIn: "12h",
   });
   return token;
 };
